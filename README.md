@@ -138,3 +138,36 @@ CREATE TABLE EMEA_INSTANCE AS SELECT
 ```
 hive -e 'Select *  from employee' > '/home/neerajm/emp_data/emp.csv'
 ```
+
+##### SerDe
+* A SerDe allows Hive to read in data from a table, and write it back out to HDFS in any custom format
+* IO interface to seriaize/decerialize data into hive tables.
+* Built-in SerDes
+     *   Avro (Hive 0.9.1 and later)
+     *   ORC (Hive 0.11 and later)
+     *   RegEx
+     *   Thrift
+     *   Parquet (Hive 0.13 and later)
+     *   CSV (Hive 0.14 and later)
+     *   JsonSerDe (Hive 0.12 and later in hcatalog-core)
+
+```hdfs dfs -put sample.csv /tmp/serdes/```
+* CSV file
+```
+drop table if exists sample;
+create external table sample(id int,first_name string,last_name string,email string,gender string,ip_address string)
+  row format serde 'org.apache.hadoop.hive.serde2.OpenCSVSerde'
+  stored as textfile
+location '/tmp/serdes/';
+```
+* TSV file
+```
+drop table if exists sample;
+create external table sample(id int,first_name string,last_name string,email string,gender string,ip_address string)
+  row format serde 'org.apache.hadoop.hive.serde2.OpenCSVSerde'
+with serdeproperties (
+  "separatorChar" = "\t"
+  )
+  stored as textfile
+location '/tmp/serdes/';
+```
