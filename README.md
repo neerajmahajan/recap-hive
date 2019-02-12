@@ -171,3 +171,12 @@ with serdeproperties (
   stored as textfile
 location '/tmp/serdes/';
 ```
+
+##### Map Join
+* It allows a table to be loaded into memory so that a (very fast) join could be performed entirely within a mapper without having to use a Map/Reduce step.
+
+``` SELECT /*+ MAPJOIN(c) */ * FROM orders o JOIN cities c ON (o.city_id = c.id); ```
+
+``` hive.auto.convert.join ```
+``` Hive will automatically use mapjoins for any tables smaller than hive.mapjoin.smalltable.filesize (default is 25MB) ```
+* Mapjoins have a limitation in that the same table or alias cannot be used to join on different columns in the same query.
